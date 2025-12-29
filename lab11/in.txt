@@ -1,0 +1,40 @@
+Platfomer
+Nintendo R&D4
+Nintendo Entertainment System (NES)
+13.09.1985
+Action-adventure
+Nintendo R&D 4
+Nintendo Entertainment System (NES)
+21.02.1986
+Puzzle
+Алексей Пажитнов
+Электроника-60
+06.06.1984
+FPS
+id Software
+PC (MS-DOS)
+10.12.1993
+FPS
+Valve Corporation
+Microsoft Windows
+19.11.1998
+Sandbox
+Mojang Studios
+Windows, Linux, macOS
+18.11.2011
+MMORPG, Fantasy
+Blizzard Entertainment
+Windows, macOS
+23.11.2004
+Action-adventure
+Rockstar North
+PlayStation 3, Xbox 360
+17.09.2013
+Action/RPG
+Bethesda Game Studios
+Windows, PlayStation 3, Xbox 360
+11.11.2011
+Action/RPG
+FromSoftware
+PlayStation 3, Xbox 360
+22.09.2011ate

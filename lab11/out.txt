@@ -1,0 +1,70 @@
+========== Game info ==========
+Genre: Platfomer
+Developer: Nintendo R&D4
+Platform: Nintendo Entertainment System (NES)
+Realese date: 13.09.1985
+===============================
+
+========== Game info ==========
+Genre: Action-adventure
+Developer: Nintendo R&D 4
+Platform: Nintendo Entertainment System (NES)
+Realese date: 21.02.1986
+===============================
+
+========== Game info ==========
+Genre: Puzzle
+Developer: Алексей Пажитнов
+Platform: Электроника-60
+Realese date: 06.06.1984
+===============================
+
+========== Game info ==========
+Genre: FPS
+Developer: id Software
+Platform: PC (MS-DOS)
+Realese date: 10.12.1993
+===============================
+
+========== Game info ==========
+Genre: FPS
+Developer: Valve Corporation
+Platform: Microsoft Windows
+Realese date: 19.11.1998
+===============================
+
+========== Game info ==========
+Genre: Sandbox
+Developer: Mojang Studios
+Platform: Windows, Linux, macOS
+Realese date: 18.11.2011
+===============================
+
+========== Game info ==========
+Genre: MMORPG, Fantasy
+Developer: Blizzard Entertainment
+Platform: Windows, macOS
+Realese date: 23.11.2004
+===============================
+
+========== Game info ==========
+Genre: Action-adventure
+Developer: Rockstar North
+Platform: PlayStation 3, Xbox 360
+Realese date: 17.09.2013
+===============================
+
+========== Game info ==========
+Genre: Action/RPG
+Developer: Bethesda Game Studios
+Platform: Windows, PlayStation 3, Xbox 360
+Realese date: 11.11.2011
+===============================
+
+========== Game info ==========
+Genre: Action/RPG
+Developer: FromSoftware
+Platform: PlayStation 3, Xbox 360
+Realese date: 22.09.2011ate
+===============================
+
