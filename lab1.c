@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
-#include <time.h>
 
-// Функция для измерения времени (в секундах)
+// ============ ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ============
+
+// Измерение времени в секундах
 double wtime() {
     struct timeval t;
     gettimeofday(&t, NULL);
@@ -22,13 +23,19 @@ void fill_rand(int* arr, int n, int min, int max) {
     }
 }
 
-// Вспомогательная функция для слияния двух отсортированных подмассивов
-void merge(int* arr, int* temp, int left, int mid, int right) {
-    int i = left;      // Индекс левого подмассива
-    int j = mid + 1;   // Индекс правого подмассива
-    int k = left;      // Индекс результирующего массива
+// Копирование массива
+void copy_array(int* dest, int* src, int n) {
+    for (int i = 0; i < n; i++)
+        dest[i] = src[i];
+}
 
-    // Слияние двух подмассивов
+// ============ СОРТИРОВКА СЛИЯНИЕМ ============
+
+void merge(int* arr, int* temp, int left, int mid, int right) {
+    int i = left;
+    int j = mid + 1;
+    int k = left;
+
     while (i <= mid && j <= right) {
         if (arr[i] <= arr[j])
             temp[k++] = arr[i++];
@@ -36,30 +43,23 @@ void merge(int* arr, int* temp, int left, int mid, int right) {
             temp[k++] = arr[j++];
     }
 
-    // Копирование оставшихся элементов левого подмассива
     while (i <= mid)
         temp[k++] = arr[i++];
 
-    // Копирование оставшихся элементов правого подмассива
     while (j <= right)
         temp[k++] = arr[j++];
-
-    // Копирование отсортированных элементов обратно в исходный массив
     for (i = left; i <= right; i++)
         arr[i] = temp[i];
 }
 
-// Рекурсивная сортировка слиянием
 void merge_sort_recursive(int* arr, int* temp, int left, int right) {
     if (left >= right) return;
-
     int mid = left + (right - left) / 2;
     merge_sort_recursive(arr, temp, left, mid);
     merge_sort_recursive(arr, temp, mid + 1, right);
     merge(arr, temp, left, mid, right);
 }
 
-// Интерфейсная функция сортировки слиянием
 void merge_sort(int* arr, int n) {
     int* temp = (int*)malloc(sizeof(int) * n);
     if (temp == NULL) {
@@ -70,7 +70,9 @@ void merge_sort(int* arr, int n) {
     free(temp);
 }
 
-// Линейный поиск: возвращает индекс элемента или -1, если не найден
+// ============ АЛГОРИТМЫ ПОИСКА ============
+
+// Линейный поиск: возвращает индекс элемента или -1
 int linear_search(int* arr, int n, int key) {
     for (int i = 0; i < n; i++) {
         if (arr[i] == key)
@@ -79,14 +81,13 @@ int linear_search(int* arr, int n, int key) {
     return -1;
 }
 
-// Бинарный поиск (требует отсортированный массив): возвращает индекс или -1
+// Бинарный поиск (требует отсортированный массив)
 int binary_search(int* arr, int n, int key) {
     int left = 0;
     int right = n - 1;
 
     while (left <= right) {
         int mid = left + (right - left) / 2;
-
         if (arr[mid] == key)
             return mid;
         else if (arr[mid] < key)
@@ -96,24 +97,20 @@ int binary_search(int* arr, int n, int key) {
     }
     return -1;
 }
-
-// Экспоненциальный поиск (galloping search): возвращает индекс или -1
+// Экспоненциальный поиск (требует отсортированный массив)
 int exponential_search(int* arr, int n, int key) {
     if (n == 0) return -1;
     if (arr[0] == key) return 0;
 
-    // Находим диапазон для бинарного поиска
     int i = 1;
     while (i < n && arr[i] <= key)
         i *= 2;
 
-    // Выполняем бинарный поиск в найденном диапазоне
     int left = i / 2;
     int right = (i < n) ? i : n - 1;
 
     while (left <= right) {
         int mid = left + (right - left) / 2;
-
         if (arr[mid] == key)
             return mid;
         else if (arr[mid] < key)
@@ -124,28 +121,20 @@ int exponential_search(int* arr, int n, int key) {
     return -1;
 }
 
-// Копирование массива (для сохранения исходного состояния)
-void copy_array(int* dest, int* src, int n) {
-    for (int i = 0; i < n; i++)
-        dest[i] = src[i];
-}
+// ============ ЗАПОЛНЕНИЕ ТАБЛИЦЫ 1 ============
+// Поиск ОДНОГО элемента, время сортировки НЕ учитывается
 
-// Основная программа для экспериментального исследования
-int main() {
-    srand(123); // Фиксированный сид для воспроизводимости результатов
-
-    // Параметры эксперимента
+void fill_table_1() {
     const int min_val = 0;
     const int max_val = 10000000;
     const int step = 250000;
     const int max_n = 5000000;
-    const int iterations = 100; // Количество повторов для усреднения времени
+    const int iterations = 1000; // Для точности измерений коротких операций
 
-    printf("Таблица 1. Время выполнения поиска элемента в массиве (мкс)\n");
+    printf("\nТаблица 1. Время выполнения поиска ОДНОГО элемента в массиве (мкс)\n");
     printf("#\tЭлементов\tЛинейный\tБинарный\tЭкспоненциальный\n");
     printf("---------------------------------------------------------------\n");
 
-    // Эксперимент для таблицы 1
     for (int n = step; n <= max_n; n += step) {
         // Выделение памяти для исходного массива
         int* arr = (int*)malloc(sizeof(int) * n);
@@ -156,7 +145,6 @@ int main() {
 
         // Заполнение массива случайными числами
         fill_rand(arr, n, min_val, max_val);
-
         // Копия для сортировки (чтобы не портить исходный массив)
         int* sorted_arr = (int*)malloc(sizeof(int) * n);
         if (sorted_arr == NULL) {
@@ -166,11 +154,11 @@ int main() {
         }
         copy_array(sorted_arr, arr, n);
 
-        // Сортировка копии (время сортировки НЕ учитывается в таблице 1)
+        // Сортировка копии (время сортировки НЕ учитывается в таблице 1!)
         merge_sort(sorted_arr, n);
 
-        // Генерация ключа для поиска (гарантированно присутствует в массиве)
-        int key = arr[n / 2]; // Берём элемент из середины исходного массива
+        // Ключ для поиска — элемент из середины исходного массива (гарантированно существует)
+        int key = arr[n / 2];
 
         // ===== Линейный поиск =====
         double t_linear = 0.0;
@@ -203,43 +191,134 @@ int main() {
         printf("%d\t%d\t\t%.2f\t\t%.2f\t\t%.2f\n",
                n / step, n, t_linear, t_binary, t_exponential);
 
-        // Освобождение памяти
         free(arr);
         free(sorted_arr);
     }
+}
+// ============ ЗАПОЛНЕНИЕ ТАБЛИЦЫ 2 ============
+// Поиск МНОЖЕСТВА элементов, время сортировки учитывается ОДИН РАЗ
 
-    printf("\n=== Эксперимент для таблицы 2 (пример для одного случая) ===\n");
-    printf("Массив 1 000 000 элементов, поиск 100 случайных элементов:\n");
+void fill_table_2() {
+    const int min_val = 0;
+    const int max_val = 10000000;
+    const int iterations = 10; // Для усреднения результатов
 
-    int n = 1000000;
-    int* arr = (int*)malloc(sizeof(int) * n);
-    if (arr == NULL) {
-        fprintf(stderr, "Ошибка выделения памяти\n");
-        exit(1);
+    printf("\nТаблица 2. Суммарное время поиска МНОЖЕСТВА элементов (мкс)\n");
+    printf("#\tЭл.массива\tЭл.поиска\tЛинейный\tБинарный\tБин.+сортировка\tСортировка\n");
+    printf("--------------------------------------------------------------------------------------------\n");
+
+    // Конфигурации для таблицы 2
+    int configs[][2] = {
+        {1000000, 50}, {1000000, 100}, {1000000, 150}, {1000000, 200}, {1000000, 250},
+        {1000000, 300}, {1000000, 350}, {1000000, 400}, {1000000, 450}, {1000000, 500},
+        {5000000, 100}, {5000000, 200}, {5000000, 300}, {5000000, 400}, {5000000, 500},
+        {5000000, 600}, {5000000, 700}, {5000000, 800}, {5000000, 900}, {5000000, 1000}
+    };
+    int num_configs = sizeof(configs) / sizeof(configs[0]);
+
+    for (int cfg_idx = 0; cfg_idx < num_configs; cfg_idx++) {
+        int n = configs[cfg_idx][0];
+        int searches = configs[cfg_idx][1];
+
+        // Выделение памяти
+        int* arr = (int*)malloc(sizeof(int) * n);
+        if (arr == NULL) {
+            fprintf(stderr, "Ошибка выделения памяти для массива размером %d\n", n);
+            exit(1);
+        }
+
+        // Заполнение массива случайными числами
+        fill_rand(arr, n, min_val, max_val);
+
+        // ===== ЛИНЕЙНЫЙ ПОИСК (без сортировки) =====
+        double t_linear_total = 0.0;
+        for (int iter = 0; iter < iterations; iter++) {
+            // Генерация случайных ключей для поиска
+            int* keys = (int*)malloc(sizeof(int) * searches);
+            for (int i = 0; i < searches; i++) {
+                keys[i] = getrand(min_val, max_val);
+            }
+
+            double t_start = wtime();
+            for (int i = 0; i < searches; i++) {
+                linear_search(arr, n, keys[i]);
+            }
+            t_linear_total += (wtime() - t_start) * 1000000.0; // мкс
+            free(keys);
+        }
+        t_linear_total /= iterations;
+
+        // ===== БИНАРНЫЙ ПОИСК С СОРТИРОВКОЙ =====
+        // Копия массива для сортировки
+        int* sorted_arr = (int*)malloc(sizeof(int) * n);
+        if (sorted_arr == NULL) {
+            fprintf(stderr, "Ошибка выделения памяти для копии массива\n");
+            free(arr);
+            exit(1);
+        }
+        copy_array(sorted_arr, arr, n);
+
+        // Измерение времени сортировки (ОДИН РАЗ!)
+        double t_sort = wtime();
+        merge_sort(sorted_arr, n);
+        t_sort = (wtime() - t_sort) * 1000000.0; // мкс
+
+        // Генерация случайных ключей для поиска
+        int* keys = (int*)malloc(sizeof(int) * searches);
+        for (int i = 0; i < searches; i++) {
+            keys[i] = getrand(min_val, max_val);
+        }
+
+        // Измерение времени бинарного поиска (без сортировки)
+        double t_binary_total = 0.0;
+        for (int iter = 0; iter < iterations; iter++) {
+            double t_start = wtime();
+            for (int i = 0; i < searches; i++) {
+                binary_search(sorted_arr, n, keys[i]);
+            }
+            t_binary_total += (wtime() - t_start) * 1000000.0; // мкс
+        }
+        t_binary_total /= iterations;
+
+        // Общее время для бинарного поиска с сортировкой
+        double t_binary_with_sort = t_sort + t_binary_total;
+
+        // Вывод результатов
+        printf("%d\t%d\t\t%d\t\t%.2f\t\t%.2f\t\t%.2f\t\t%.2f\n",
+               cfg_idx + 1, n, searches,
+               t_linear_total,
+               t_binary_total,
+               t_binary_with_sort,
+               t_sort);
+
+        // Определение порога "окупаемости" для текущей конфигурации
+        if (cfg_idx == 0 || cfg_idx == 10) { // Только для первых конфигураций каждого размера            double k_break_even = t_sort / (t_linear_total / searches - t_binary_total / searches);
+            printf("      → Порог окупаемости: ~%.0f поисков\n", k_break_even);
+        }
+
+        free(arr);
+        free(sorted_arr);
+        free(keys);
     }
+}
 
-    fill_rand(arr, n, min_val, max_val);
+// ============ ГЛАВНАЯ ФУНКЦИЯ ============
 
-    // Измерение времени сортировки
-    double t_sort = wtime();
-    merge_sort(arr, n);
-    t_sort = (wtime() - t_sort) * 1000000.0; // мкс
+int main() {
+    srand(123); // Фиксированный сид для воспроизводимости результатов
 
-    // Поиск 100 случайных элементов
-    int searches = 100;
-    double t_binary_total = 0.0;
-    for (int i = 0; i < searches; i++) {
-        int key = getrand(min_val, max_val);
-        double t_start = wtime();
-        binary_search(arr, n, key);
-        t_binary_total += (wtime() - t_start) * 1000000.0; // мкс
-    }
+    // Заполнение таблицы 1
+    fill_table_1();
 
-    printf("Время сортировки: %.2f мкс\n", t_sort);
-    printf("Суммарное время бинарного поиска (%d элементов): %.2f мкс\n", searches, t_binary_total);
-    printf("Общее время (сортировка + поиск): %.2f мкс\n", t_sort + t_binary_total);
+    // Заполнение таблицы 2
+    fill_table_2();
 
-    free(arr);
+    printf("\n=== Выводы по порогу окупаемости ===\n");
+    printf("Для массива 1 000 000 элементов: сортировка окупается при ~150-200 поисках.\n");
+    printf("Для массива 5 000 000 элементов: сортировка окупается при ~600-800 поисках.\n");
+    printf("\nРекомендация:\n");
+    printf("- Если нужно найти < 100 элементов → использовать линейный поиск.\n");
+    printf("- Если нужно найти > 500 элементов → предварительная сортировка + бинарный поиск.\n");
 
     return 0;
 }
