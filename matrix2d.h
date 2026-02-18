@@ -2,79 +2,75 @@
 #define MATRIX2D_H
 
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
-#include <time.h>
 
-// Структура матрицы: размеры, флаг квадратности, данные
-typedef struct
-{
-    int rows;        // число строк
-    int cols;        // число столбцов
-    bool has_diag;   // квадратная? (rows == cols)
-    float **data;    // двумерный массив
+// Структура двумерной матрицы
+typedef struct {
+    int rows;          // Количество строк
+    int cols;          // Количество столбцов
+    int has_diag;      // Флаг: имеет ли матрица главную диагональ (1 - да, 0 - нет)
+    float** data;      // Динамический массив указателей на строки
 } matrix2d;
 
-// Создание/удаление
-matrix2d *matrix2d_default();                    // матрица 1x1
-matrix2d *matrix2d_create(int rows, int cols);   // создать матрицу
-matrix2d *matrix2d_copy(const matrix2d *src);    // копия матрицы
-void matrix2d_destroy(matrix2d *m);               // удалить матрицу
+// Функция для очистки буфера ввода
+void clear();
 
-// Сравнение по норме
-bool matrix2d_eq(const matrix2d *m1, const matrix2d *m2);  // равно
-bool matrix2d_ne(const matrix2d *m1, const matrix2d *m2);  // не равно
-bool matrix2d_lt(const matrix2d *m1, const matrix2d *m2);  // меньше
-bool matrix2d_gt(const matrix2d *m1, const matrix2d *m2);  // больше
-bool matrix2d_le(const matrix2d *m1, const matrix2d *m2);  // меньше или равно
-bool matrix2d_ge(const matrix2d *m1, const matrix2d *m2);  // больше или равно
+// Конструкторы и деструктор
+matrix2d* matrix2d_default();
+matrix2d* matrix2d_create(int rows, int cols);
+matrix2d* matrix2d_copy(const matrix2d* src);
+void matrix2d_destroy(matrix2d* m);
 
-// Ввод/вывод
-void matrix2d_input(matrix2d *m);                 // ввод с клавиатуры
-void matrix2d_print(const matrix2d *m);           // вывод на экран
+// Операторы сравнения
+int matrix2d_eq(const matrix2d* m1, const matrix2d* m2);
+int matrix2d_ne(const matrix2d* m1, const matrix2d* m2);
+int matrix2d_lt(const matrix2d* m1, const matrix2d* m2);
+int matrix2d_gt(const matrix2d* m1, const matrix2d* m2);
+int matrix2d_le(const matrix2d* m1, const matrix2d* m2);
+int matrix2d_ge(const matrix2d* m1, const matrix2d* m2);
 
-// Работа с элементами
-void matrix2d_set(matrix2d *m, int row, int col, float value);  // изменить элемент
-float matrix2d_get(const matrix2d *m, int row, int col);       // получить элемент
-void matrix2d_inc(matrix2d *m);                    // прибавить 1 ко всем
-void matrix2d_dec(matrix2d *m);                    // вычесть 1 из всех
+// Ввод/вывод матриц
+void matrix2d_input(matrix2d* m);
+void matrix2d_print(const matrix2d* m);
 
-// Случайные числа
-void matrix2d_fill_random(matrix2d *m, float min, float max);  // заполнить случайно
+// Изменение данных структуры
+void matrix2d_set(matrix2d* m, int row, int col, float value);
+float matrix2d_get(const matrix2d* m, int row, int col);
+void matrix2d_inc(matrix2d* m);
+void matrix2d_dec(matrix2d* m);
 
-// Извлечение частей
-matrix2d *matrix2d_get_row(const matrix2d *m, int row_idx);  // строка как матрица
-matrix2d *matrix2d_get_col(const matrix2d *m, int col_idx);  // столбец как матрица
+// Заполнение матрицы случайными значениями
+void matrix2d_fill_random(matrix2d* m, float min, float max);
 
-// Транспонирование
-matrix2d *matrix2d_transpose(const matrix2d *m);  // транспонированная
+// Получение столбца/строки
+matrix2d* matrix2d_get_row(const matrix2d* m, int row_idx);
+matrix2d* matrix2d_get_col(const matrix2d* m, int col_idx);
 
-// Определитель (только для квадратных)
-float matrix2d_determinant(const matrix2d *m);    // найти определитель
+// Транспонирование матрицы
+matrix2d* matrix2d_transpose(const matrix2d* m);
 
-// Обратная матрица (только для квадратных)
-matrix2d *matrix2d_inverse(const matrix2d *m);    // найти обратную
+// Нахождение определителя (детерминант)
+float matrix2d_determinant(const matrix2d* m);
+
+// Вычисление обратной матрицы
+matrix2d* matrix2d_inverse(const matrix2d* m);
 
 // Функции меню
-void menu_create_matrix(matrix2d **m);            // создать через меню
-void menu_print_matrix(const matrix2d *m);        // вывести через меню
-void menu_fill_random(matrix2d *m);                // заполнить случайно через меню
-void menu_set_element(matrix2d *m);                // изменить элемент через меню
-void menu_increment(matrix2d *m);                  // инкремент через меню
-void menu_decrement(matrix2d *m);                  // декремент через меню
-void menu_get_row(const matrix2d *m);              // получить строку через меню
-void menu_get_col(const matrix2d *m);              // получить столбец через меню
-void menu_transpose(matrix2d **m);                 // транспонировать через меню
-void menu_determinant(const matrix2d *m);          // определитель через меню
-void menu_inverse(const matrix2d *m);              // обратная через меню
-void menu_compare(const matrix2d *m1, const matrix2d *m2);  // сравнить через меню
-void menu_destroy(matrix2d **m);                   // удалить через меню
+void menu_create_matrix(matrix2d** m);
+void menu_print_matrix(const matrix2d* m);
+void menu_fill_random(matrix2d* m);
+void menu_set_element(matrix2d* m);
+void menu_increment(matrix2d* m);
+void menu_decrement(matrix2d* m);
+void menu_get_row(const matrix2d* m);
+void menu_get_col(const matrix2d* m);
+void menu_transpose(matrix2d** m);
+void menu_determinant(const matrix2d* m);
+void menu_inverse(const matrix2d* m);
+void menu_compare(const matrix2d* m1, const matrix2d* m2);
+void menu_destroy(matrix2d** m);
 
-// Вспомогательное
-void clear_input();                                // очистить буфер ввода
-bool is_matrix_created(const matrix2d *m);         // проверка на NULL
-float matrix2d_norm(const matrix2d *m);            // квадрат нормы
+// Вспомогательные функции
+int is_matrix_created(const matrix2d* m);
+float matrix2d_norm(const matrix2d* m);
 
 #endif
