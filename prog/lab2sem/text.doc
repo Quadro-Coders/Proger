@@ -1,0 +1,36 @@
+break queue_create 
+run save test_gdb.bin -b 
+print q 
+print *q
+break Matrix2D_create
+continue 
+print m->data
+break Matrix2D_free 
+continue 
+print m->data
+info registers 
+
+
+gdb ./main_o0
+break Matrix2D_fill_random          
+run save test_o0.bin -b --rows 3 --cols 3
+layout src                          
+display i                          
+display j                           
+next                               
+next
+print m->data[0][0]                 
+info registers                      
+quit
+
+gdb ./main_o2
+break Matrix2D_fill_random
+run save test_o2.bin -b --rows 3 --cols 3
+layout asm                          
+next                                
+next
+print i                             
+print j                             
+info registers                      
+disassemble Matrix2D_fill_random  
+quit
